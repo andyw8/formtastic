@@ -60,7 +60,8 @@ module Formtastic
     end
 
     def columns
-      @columns ||= self.name.camelize.constantize.content_columns.reject { |column| IGNORED_COLUMNS.include?(column.name.to_sym) }
+      klass = self.name.camelize.constantize
+      @columns ||= klass.content_columns.reject { |column| IGNORED_COLUMNS.include?(column.name.to_sym)  || (klass._accessible_attributes && ! klass._accessible_attributes.collect.include?(column.name))}
     end
 
     def save_to_clipboard(data)
